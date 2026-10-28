@@ -1,7 +1,7 @@
 package com.studios.forsaken2d
 
-import android.content.pm.ActivityInfo
 import android.content.Intent
+import android.content.pm.ActivityInfo
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -19,10 +19,8 @@ class LobbyActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         try {
-            // 🔥 Ép xoay ngang (bảo hiểm tầng 2)
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
-            // 🔥 Full-screen immersive
             window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
@@ -80,7 +78,6 @@ class LobbyActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        // 🔥 Đảm bảo xoay ngang khi quay về Lobby
         requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
     }
 
