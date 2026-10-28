@@ -1,7 +1,5 @@
-plugins {
-    id 'com.android.application'
-    id 'org.jetbrains.kotlin.android'
-}
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
 
 android {
     namespace 'com.studios.forsaken2d'
@@ -15,7 +13,6 @@ android {
         versionName "1.0.0"
     }
 
-    // 🚀 TỰ ĐỘNG ĐỔI TÊN FILE APK
     applicationVariants.all { variant ->
         variant.outputs.all {
             def buildType = variant.buildType.name
@@ -26,8 +23,6 @@ android {
 
     buildTypes {
         debug {
-            applicationIdSuffix ""
-            versionNameSuffix ""
             signingConfig signingConfigs.debug
         }
         release {
