@@ -1,92 +1,102 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="@color/bg_dark"
-    android:padding="40dp"
-    android:gravity="center">
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="FORSAKEN"
-        android:textColor="@color/text_light"
-        android:textSize="56sp"
-        android:textStyle="bold|italic"
-        android:fontFamily="serif"
-        android:letterSpacing="0.2"
-        android:shadowColor="@color/accent_red"
-        android:shadowRadius="20"
-        android:shadowDx="2"
-        android:shadowDy="2"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="// NIGHTFALL"
-        android:textColor="@color/accent_red"
-        android:textSize="14sp"
-        android:letterSpacing="0.4"
-        android:layout_marginBottom="30dp"/>
-
-    <TextView
-        android:id="@+id/tvIp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="IP: ---"
-        android:textColor="@color/accent_cyan"
-        android:textSize="14sp"
-        android:layout_marginBottom="16dp"/>
-
-    <EditText
-        android:id="@+id/etName"
-        android:layout_width="300dp"
-        android:layout_height="wrap_content"
-        android:hint="Survivor name..."
-        android:textColor="#FFFFFF"
-        android:textColorHint="#666666"
-        android:backgroundTint="@color/accent_cyan"
-        android:layout_marginBottom="16dp"/>
-
-    <Button
-        android:id="@+id/btnSinglePlayer"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:text="▶  PLAY OFFLINE (vs AI)"
-        android:backgroundTint="@color/accent_green"
-        android:textColor="#000000"
-        android:textStyle="bold"
-        android:layout_marginBottom="12dp"/>
-
-    <Button
-        android:id="@+id/btnCreateRoom"
-        android:layout_width="300dp"
-        android:layout_height="56dp"
-        android:text="⚔  CREATE ROOM (Host)"
-        android:backgroundTint="@color/accent_red"
-        android:layout_marginBottom="12dp"/>
+    android:background="#0A0A0A"
+    android:fillViewport="true">
 
     <LinearLayout
-        android:layout_width="300dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <EditText
-            android:id="@+id/etIp"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="Host IP"
-            android:inputType="text"
-            android:textColor="#FFFFFF"
-            android:textColorHint="#666666"
-            android:backgroundTint="@color/accent_cyan"/>
-        <Button
-            android:id="@+id/btnJoin"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:padding="24dp">
+
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="JOIN"
-            android:backgroundTint="@color/accent_cyan"
-            android:textColor="#000000"/>
+            android:text="FORSAKEN"
+            android:textColor="#F5C7D8"
+            android:textSize="48sp"
+            android:textStyle="bold|italic"
+            android:fontFamily="serif"
+            android:letterSpacing="0.2"
+            android:shadowColor="#D32F2F"
+            android:shadowRadius="20"
+            android:shadowDx="2"
+            android:shadowDy="2"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="// NIGHTFALL"
+            android:textColor="#D32F2F"
+            android:textSize="12sp"
+            android:letterSpacing="0.4"
+            android:layout_marginBottom="12dp"/>
+
+        <TextView
+            android:id="@+id/tvIp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="IP: ---"
+            android:textColor="#00E5FF"
+            android:textSize="12sp"
+            android:layout_marginBottom="8dp"/>
+
+        <EditText
+            android:id="@+id/etName"
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:hint="Survivor name..."
+            android:textColor="#FFFFFF"
+            android:textColorHint="#666666"
+            android:backgroundTint="#00E5FF"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnSinglePlayer"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:text="▶  PLAY OFFLINE (vs AI)"
+            android:backgroundTint="#7CFFB2"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <Button
+            android:id="@+id/btnCreateRoom"
+            android:layout_width="320dp"
+            android:layout_height="50dp"
+            android:text="⚔  CREATE ROOM (Host)"
+            android:backgroundTint="#D32F2F"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp"/>
+
+        <LinearLayout
+            android:layout_width="320dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+            <EditText
+                android:id="@+id/etIp"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Host IP"
+                android:inputType="text"
+                android:textColor="#FFFFFF"
+                android:textColorHint="#666666"
+                android:backgroundTint="#00E5FF"/>
+            <Button
+                android:id="@+id/btnJoin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="JOIN"
+                android:backgroundTint="#00E5FF"
+                android:textColor="#000000"/>
+        </LinearLayout>
+
     </LinearLayout>
-</LinearLayout>
+</ScrollView>
