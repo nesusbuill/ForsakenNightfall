@@ -12,6 +12,27 @@ jobs:
       - name: 📥 Checkout
         uses: actions/checkout@v4
 
+      - name: 🔍 DEBUG — Kiểm tra file AndroidManifest
+        run: |
+          echo "===== BRANCH ĐANG BUILD ====="
+          git branch --show-current
+          echo ""
+          echo "===== TÌM TẤT CẢ FILE AndroidManifest ====="
+          find . -iname "androidmanifest*" 2>/dev/null
+          echo ""
+          echo "===== KIỂM TRA FILE CHÍNH ====="
+          if [ -f "app/src/main/AndroidManifest.xml" ]; then
+            echo "✅ TÌM THẤY ĐÚNG PATH!"
+            echo "--- Kích thước: $(wc -c < app/src/main/AndroidManifest.xml) bytes"
+            echo "--- Nội dung 3 dòng đầu:"
+            head -3 app/src/main/AndroidManifest.xml
+          else
+            echo "❌ KHÔNG TÌM THẤY app/src/main/AndroidManifest.xml!"
+            echo "--- Các file XML hiện có trong app/src/:"
+            find app/src -name "*.xml" 2>/dev/null
+            exit 1
+          fi
+
       - name: ☕ Setup JDK 17
         uses: actions/setup-java@v4
         with:
