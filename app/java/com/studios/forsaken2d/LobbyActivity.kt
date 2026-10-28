@@ -1,7 +1,10 @@
 package com.studios.forsaken2d
 
+import android.content.pm.ActivityInfo
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
@@ -11,46 +14,74 @@ import java.net.Inet4Address
 import java.net.NetworkInterface
 
 class LobbyActivity : AppCompatActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_lobby)
 
-        val tvIp = findViewById<TextView>(R.id.tvIp)
-        val etName = findViewById<EditText>(R.id.etName)
-        val etIp = findViewById<EditText>(R.id.etIp)
-        tvIp.text = "IP: ${getLocalIp()}"
+        try {
+            // 🔥 Ép xoay ngang (bảo hiểm tầng 2)
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
 
-        NetworkManager.onGameStart = {
-            runOnUiThread {
+            // 🔥 Full-screen immersive
+            window.decorView.systemUiVisibility = (
+                View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+            )
+
+            setContentView(R.layout.activity_lobby)
+
+            val tvIp = findViewById<TextView>(R.id.tvIp)
+            val etName = findViewById<EditText>(R.id.etName)
+            val etIp = findViewById<EditText>(R.id.etIp)
+            tvIp.text = "IP: ${getLocalIp()}"
+
+            NetworkManager.onGameStart = {
+                runOnUiThread {
+                    startActivity(Intent(this, GameActivity::class.java))
+                    finish()
+                }
+            }
+
+            findViewById<Button>(R.id.btnSinglePlayer).setOnClickListener {
+                NetworkManager.playerName = etName.text.toString().ifEmpty { "Player" }
+                NetworkManager.isHost = true
+                NetworkManager.isConnected = false
                 startActivity(Intent(this, GameActivity::class.java))
                 finish()
             }
-        }
 
-        findViewById<Button>(R.id.btnSinglePlayer).setOnClickListener {
-            NetworkManager.playerName = etName.text.toString().ifEmpty { "Player" }
-            NetworkManager.isHost = true
-            NetworkManager.isConnected = false
-            startActivity(Intent(this, GameActivity::class.java))
-            finish()
-        }
-
-        findViewById<Button>(R.id.btnCreateRoom).setOnClickListener {
-            NetworkManager.playerName = etName.text.toString().ifEmpty { "Host" }
-            NetworkManager.host()
-            Toast.makeText(this, "Room created! IP: ${getLocalIp()}", Toast.LENGTH_LONG).show()
-        }
-
-        findViewById<Button>(R.id.btnJoin).setOnClickListener {
-            val ip = etIp.text.toString()
-            if (ip.isEmpty()) {
-                Toast.makeText(this, "Enter IP", Toast.LENGTH_SHORT).show()
-                return@setOnClickListener
+            findViewById<Button>(R.id.btnCreateRoom).setOnClickListener {
+                NetworkManager.playerName = etName.text.toString().ifEmpty { "Host" }
+                NetworkManager.host()
+                Toast.makeText(this, "Room created! IP: ${getLocalIp()}", Toast.LENGTH_LONG).show()
             }
-            NetworkManager.playerName = etName.text.toString().ifEmpty { "Player" }
-            NetworkManager.join(ip)
-            Toast.makeText(this, "Connecting...", Toast.LENGTH_SHORT).show()
+
+            findViewById<Button>(R.id.btnJoin).setOnClickListener {
+                val ip = etIp.text.toString()
+                if (ip.isEmpty()) {
+                    Toast.makeText(this, "Enter IP", Toast.LENGTH_SHORT).show()
+                    return@setOnClickListener
+                }
+                NetworkManager.playerName = etName.text.toString().ifEmpty { "Player" }
+                NetworkManager.join(ip)
+                Toast.makeText(this, "Connecting...", Toast.LENGTH_SHORT).show()
+            }
+
+        } catch (e: Exception) {
+            Log.e("FORSAKEN_LOBBY", "onCreate crashed", e)
+            Toast.makeText(this, "Lỗi khởi động: ${e.message}", Toast.LENGTH_LONG).show()
+            e.printStackTrace()
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        // 🔥 Đảm bảo xoay ngang khi quay về Lobby
+        requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
     }
 
     private fun getLocalIp(): String {
