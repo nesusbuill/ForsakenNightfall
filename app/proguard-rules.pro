@@ -1,0 +1,3 @@
+-keep class com.studios.forsaken2d.** { *; }
+-keep class org.json.** { *; }
+-dontwarn org.json.**
