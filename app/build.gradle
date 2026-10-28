@@ -11,31 +11,21 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
-
-        // 🔥 MULTIDEX — Bắt buộc cho máy 32-bit
         multiDexEnabled true
-
-        // ❌ BỎ ndk.abiFilters — vì app Kotlin thuần không có native lib
     }
 
-    // ✅ ĐƠN GIẢN HÓA TÊN FILE — KHÔNG cần splits ABI
     applicationVariants.all { variant ->
         variant.outputs.all {
-            def buildType = variant.buildType.name
-            def version = variant.versionName
-            outputFileName = "FORSAKEN-NIGHTFALL-v${version}-${buildType}.apk"
+            outputFileName = "FORSAKEN-NIGHTFALL-v${variant.versionName}-${variant.buildType.name}.apk"
         }
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
-            debuggable true
         }
         release {
             minifyEnabled false
-            shrinkResources false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
     }
@@ -45,21 +35,11 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = '17' }
-
-    packaging {
-        resources.excludes += [
-            'META-INF/DEPENDENCIES',
-            'META-INF/LICENSE',
-            'META-INF/NOTICE',
-            'META-INF/*.kotlin_module'
-        ]
-    }
 }
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.multidex:multidex:2.0.1'
-    implementation 'org.json:json:20231013'
+    // Đã xóa thư viện org.json vì Android có sẵn
+    // Đã xóa material vì không cần thiết cho game
 }
