@@ -1,33 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
+
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
-        android:allowBackup="true"
+        android:name=".ForsakenApp"
+        android:allowBackup="false"
         android:label="@string/app_name"
         android:icon="@mipmap/ic_launcher"
         android:theme="@style/Theme.Forsaken"
         android:hardwareAccelerated="true"
+        android:largeHeap="true"
         android:usesCleartextTraffic="true">
 
+        <!-- 🏠 Lobby: Xoay ngang tự động -->
         <activity
             android:name=".LobbyActivity"
             android:exported="true"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboardHidden">
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|smallestScreenSize">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
+        <!-- 🎮 Game: Xoay ngang tự động -->
         <activity
             android:name=".GameActivity"
             android:exported="false"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize|keyboardHidden" />
+            android:screenOrientation="sensorLandscape"
+            android:configChanges="orientation|screenSize|screenLayout|keyboardHidden|smallestScreenSize" />
     </application>
 </manifest>
