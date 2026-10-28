@@ -17,13 +17,9 @@ class GameActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
 
         try {
-            // 🔥 Ép xoay ngang
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
-
-            // 🔥 Giữ màn hình sáng
             window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
 
-            // 🔥 Full-screen immersive
             window.decorView.systemUiVisibility = (
                 View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
                 or View.SYSTEM_UI_FLAG_FULLSCREEN
