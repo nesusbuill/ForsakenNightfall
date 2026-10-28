@@ -6,6 +6,7 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
 import android.graphics.Typeface
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -14,7 +15,8 @@ import kotlin.math.hypot
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var gameThread: Thread? = null
-    @Volatile private var isPlaying = true
+    @Volatile private var isPlaying = false
+    @Volatile private var isPaused = false
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
 
     private val map = MapDB.random()
@@ -50,7 +52,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     init {
         holder.addCallback(this)
-        SoundManager.init(context)
+        try {
+            SoundManager.init(context)
+        } catch (e: Exception) {
+            Log.e("FORSAKEN_VIEW", "SoundManager init failed: ${e.message}")
+        }
         map.genPositions.forEachIndexed { i, p ->
             generators.add(Generator(i, p.first, p.second))
         }
@@ -61,29 +67,69 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     override fun surfaceCreated(holder: SurfaceHolder) {
+        Log.d("FORSAKEN_VIEW", "surfaceCreated")
         isPlaying = true
-        gameThread = Thread(this).also { it.start() }
+        isPaused = false
+        if (gameThread == null || !gameThread!!.isAlive) {
+            gameThread = Thread(this, "GameThread").also { it.start() }
+        }
     }
 
-    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {}
+    override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
+        Log.d("FORSAKEN_VIEW", "surfaceChanged: ${width}x${height}")
+    }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
+        Log.d("FORSAKEN_VIEW", "surfaceDestroyed")
         isPlaying = false
-        SoundManager.release()
-        try { gameThread?.join() } catch (_: Exception) {}
+        try { gameThread?.join(1000) } catch (_: Exception) {}
+        gameThread = null
+        try { SoundManager.release() } catch (_: Exception) {}
+    }
+
+    fun resume() {
+        isPaused = false
+    }
+
+    fun pause() {
+        isPaused = true
+    }
+
+    fun stop() {
+        isPlaying = false
+        try { gameThread?.join(2000) } catch (_: Exception) {}
+        gameThread = null
     }
 
     override fun run() {
-        var last = System.nanoTime()
-        while (isPlaying) {
-            val now = System.nanoTime()
-            val dt = (now - last) / 1_000_000_000f
-            last = now
-            update(dt)
-            val c = holder.lockCanvas() ?: continue
-            drawGame(c)
-            holder.unlockCanvasAndPost(c)
-            try { Thread.sleep(16) } catch (_: InterruptedException) {}
+        try {
+            var last = System.nanoTime()
+            while (isPlaying) {
+                if (isPaused) {
+                    Thread.sleep(30)
+                    last = System.nanoTime()
+                    continue
+                }
+                val now = System.nanoTime()
+                val dt = ((now - last) / 1_000_000_000f).coerceAtMost(0.05f)
+                last = now
+
+                try {
+                    update(dt)
+                    val c = holder.lockCanvas() ?: continue
+                    try {
+                        drawGame(c)
+                    } finally {
+                        holder.unlockCanvasAndPost(c)
+                    }
+                } catch (e: Exception) {
+                    Log.e("FORSAKEN_VIEW", "Frame error: ${e.message}", e)
+                }
+
+                try { Thread.sleep(16) } catch (_: InterruptedException) {}
+            }
+        } catch (e: Exception) {
+            Log.e("FORSAKEN_VIEW", "Game loop crashed", e)
         }
     }
 
