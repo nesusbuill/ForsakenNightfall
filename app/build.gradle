@@ -11,22 +11,44 @@ android {
         targetSdk 34
         versionCode 1
         versionName "1.0.0"
+
+        // 🔥 MULTIDEX — Bắt buộc cho máy 32-bit
+        multiDexEnabled true
+
+        // 🔥 HỖ TRỢ 32BIT + 64BIT
+        ndk {
+            abiFilters 'armeabi-v7a', 'arm64-v8a'
+        }
+    }
+
+    // 🔥 TÁCH APK RIÊNG CHO TỪNG KIẾN TRÚC
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a'
+            universalApk true   // Tạo thêm APK universal chạy mọi máy
+        }
     }
 
     applicationVariants.all { variant ->
         variant.outputs.all {
             def buildType = variant.buildType.name
             def version = variant.versionName
-            outputFileName = "FORSAKEN-NIGHTFALL-v${version}-${buildType}.apk"
+            def abi = output.getFilter(com.android.build.OutputFile.ABI)
+            def abiSuffix = abi ? "-${abi}" : "-universal"
+            outputFileName = "FORSAKEN-NIGHTFALL-v${version}${abiSuffix}-${buildType}.apk"
         }
     }
 
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
+            debuggable true
         }
         release {
             minifyEnabled false
+            shrinkResources false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
             signingConfig signingConfigs.debug
         }
@@ -37,11 +59,21 @@ android {
         targetCompatibility JavaVersion.VERSION_17
     }
     kotlinOptions { jvmTarget = '17' }
+
+    packaging {
+        resources.excludes += [
+            'META-INF/DEPENDENCIES',
+            'META-INF/LICENSE',
+            'META-INF/NOTICE',
+            'META-INF/*.kotlin_module'
+        ]
+    }
 }
 
 dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
+    implementation 'androidx.multidex:multidex:2.0.1'   // 🔥 MULTIDEX
     implementation 'org.json:json:20231013'
 }
