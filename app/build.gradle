@@ -15,29 +15,15 @@ android {
         // 🔥 MULTIDEX — Bắt buộc cho máy 32-bit
         multiDexEnabled true
 
-        // 🔥 HỖ TRỢ 32BIT + 64BIT
-        ndk {
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
-        }
+        // ❌ BỎ ndk.abiFilters — vì app Kotlin thuần không có native lib
     }
 
-    // 🔥 TÁCH APK RIÊNG CHO TỪNG KIẾN TRÚC
-    splits {
-        abi {
-            enable true
-            reset()
-            include 'armeabi-v7a', 'arm64-v8a'
-            universalApk true   // Tạo thêm APK universal chạy mọi máy
-        }
-    }
-
+    // ✅ ĐƠN GIẢN HÓA TÊN FILE — KHÔNG cần splits ABI
     applicationVariants.all { variant ->
         variant.outputs.all {
             def buildType = variant.buildType.name
             def version = variant.versionName
-            def abi = output.getFilter(com.android.build.OutputFile.ABI)
-            def abiSuffix = abi ? "-${abi}" : "-universal"
-            outputFileName = "FORSAKEN-NIGHTFALL-v${version}${abiSuffix}-${buildType}.apk"
+            outputFileName = "FORSAKEN-NIGHTFALL-v${version}-${buildType}.apk"
         }
     }
 
@@ -74,6 +60,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.12.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
-    implementation 'androidx.multidex:multidex:2.0.1'   // 🔥 MULTIDEX
+    implementation 'androidx.multidex:multidex:2.0.1'
     implementation 'org.json:json:20231013'
 }
