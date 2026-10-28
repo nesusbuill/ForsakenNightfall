@@ -1,0 +1,8 @@
+<resources>
+    <color name="bg_dark">#0A0A0A</color>
+    <color name="bg_wine">#4B3D6C</color>
+    <color name="text_light">#F5C7D8</color>
+    <color name="accent_red">#D32F2F</color>
+    <color name="accent_cyan">#00E5FF</color>
+    <color name="accent_green">#7CFFB2</color>
+</resources>
